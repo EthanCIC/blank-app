@@ -76,7 +76,7 @@ st.title("T-REX Publisher NFT Sale Calculator")
 
 total_supply = 1000000000
 base_emission = 0.2 * total_supply
-total_nodes = 100000
+total_nodes = 200000
 
 # 在側邊欄放置輸入控制項
 with st.sidebar:
