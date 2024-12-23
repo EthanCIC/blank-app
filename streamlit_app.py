@@ -96,16 +96,24 @@ with st.sidebar:
     cliff = st.slider("Cliff Duration (months)", min_value=0, max_value=12, value=12)
     vesting = st.slider("Vesting Duration (months)", min_value=1, max_value=36, value=36)
     
+    # 新增 linear vesting toggle
+    is_linear = st.toggle("No additional initial unlock", value=False)
+    
     # 當 vesting = 1 時，強制 TGE = 100% 並禁用滑桿
     if vesting == 1:
         tge_percentage = 100
-        tge = 1.0  # 100% 轉換為 1.0
+        tge = 1.0
         st.slider("First-Month Unlock (%)", min_value=0, max_value=100, value=100, disabled=True)
     else:
-        tge_percentage = st.slider("First-Month Unlock (%)", min_value=0, max_value=100, value=5)
-        tge = tge_percentage / 100  # 將百分比轉換為小數
+        if is_linear:
+            tge_percentage = (1/vesting) * 100
+            st.slider("First-Month Unlock (%)", min_value=0, max_value=100, value=int(tge_percentage), disabled=True)
+        else:
+            tge_percentage = st.slider("First-Month Unlock (%)", min_value=0, max_value=100, value=5)
+        tge = tge_percentage / 100
+
 # 計算 PV
-max_pv = calculate_max_pv(min_FDV, discount_rate, 12, 24+12) 
+max_pv = calculate_max_pv(min_FDV, discount_rate, 12, 24+12, 1/vesting) 
 # print(f"min_FDV: {min_FDV}")
 # print(f"max_pv: {max_pv}")
 result = calculate_pv(total_tokens, max_pv, discount_rate, cliff, vesting, tge)
