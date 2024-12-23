@@ -90,7 +90,7 @@ with st.sidebar:
     st.markdown(f"Engagement Reward for This Tier ($TREX): {total_tokens * 15/20:,.0f}")
 
     node_amount = total_tokens/(0.2*total_supply)*total_nodes
-    st.markdown(f"Node Amount: {node_amount:,.0f} out of 100,000")
+    st.markdown(f"Node Amount: {node_amount:,.0f} out of 200,000")
 
     discount_rate = st.slider("Annually Discount Rate (92% = 0.92)", min_value=0.0, max_value=10.0, value=0.92, step=0.01)
     cliff = st.slider("Cliff Duration (months)", min_value=0, max_value=12, value=12)
