@@ -109,7 +109,7 @@ with st.sidebar:
             tge_percentage = (1/vesting) * 100
             st.slider("First-Month Unlock (%)", min_value=0.0, max_value=100.0, value=tge_percentage, step=0.01, disabled=True)
         else:
-            tge_percentage = st.slider("First-Month Unlock (%)", min_value=0.0, max_value=100.0, value=5.0, step=0.01)
+            tge_percentage = st.slider("First-Month Unlock (%)", min_value=0.0, max_value=100.0, value=1/36, step=0.01)
         tge = tge_percentage / 100
 
 # 計算 PV
