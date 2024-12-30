@@ -5,7 +5,7 @@ import plotly.express as px
 
 # max FDV 時，no cliff and min vesting (1 month)，tge 全部釋放的 pv
 
-def calculate_max_pv(min_FDV, discount_rate, max_cliff=12, max_vesting=24+12, tge_percentage=0.05):
+def calculate_max_pv(min_FDV, discount_rate, max_cliff=12, max_vesting=24+12, tge_percentage=1/36):
     i = 1/(1+discount_rate/12)
     
     return min_FDV / (tge_percentage * i ** (max_cliff) + 
@@ -97,7 +97,7 @@ with st.sidebar:
     vesting = st.slider("Vesting Duration (months)", min_value=1, max_value=36, value=36)
     
     # 新增 linear vesting toggle
-    is_linear = st.toggle("No additional initial unlock", value=False)
+    is_linear = st.toggle("No additional initial unlock", value=True)
     
     # 當 vesting = 1 時，強制 TGE = 100% 並禁用滑桿
     if vesting == 1:
@@ -107,13 +107,13 @@ with st.sidebar:
     else:
         if is_linear:
             tge_percentage = (1/vesting) * 100
-            st.slider("First-Month Unlock (%)", min_value=0, max_value=100, value=int(tge_percentage), disabled=True)
+            st.slider("First-Month Unlock (%)", min_value=0.0, max_value=100.0, value=tge_percentage, step=0.01, disabled=True)
         else:
-            tge_percentage = st.slider("First-Month Unlock (%)", min_value=0, max_value=100, value=5)
+            tge_percentage = st.slider("First-Month Unlock (%)", min_value=0.0, max_value=100.0, value=5.0, step=0.01)
         tge = tge_percentage / 100
 
 # 計算 PV
-max_pv = calculate_max_pv(min_FDV, discount_rate, 12, 24+12, 1/vesting) 
+max_pv = calculate_max_pv(min_FDV, discount_rate, 12, 24+12) 
 # print(f"min_FDV: {min_FDV}")
 # print(f"max_pv: {max_pv}")
 result = calculate_pv(total_tokens, max_pv, discount_rate, cliff, vesting, tge)
